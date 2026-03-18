@@ -1,8 +1,8 @@
 ##
 ## EPITECH PROJECT, 2026
-## MINISHELL 1
+## MINISHELL 2
 ## File description:
-## Makefile for building the minishell 1 project
+## Makefile for building the minishell 2 project
 ##
 
 CC = epiclang
@@ -15,7 +15,8 @@ SRC = src/main.c \
 	src/env_utils.c \
 	src/exec.c \
 	src/cd.c \
-	src/my_lib2.c
+	src/my_lib2.c \
+	src/pipe.c
 OBJ = $(SRC:.c=.o)
 
 all: mysh

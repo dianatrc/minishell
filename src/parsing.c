@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2026
-** MINISHELL 1
+** MINISHELL 2
 ** File description:
 ** Input parsing and command execution flow
 */
@@ -45,7 +45,8 @@ char **transform_to_string_array(char *str, char *separator)
     return arg;
 }
 
-char **parse_command(char **arg, char **copy_env, char *line, int *last_return)
+static char **check_builtins(char **arg, char **copy_env,
+    int *last_return, char *line)
 {
     if (my_strcmp(arg[0], "exit") == 0)
         exit_program(arg, line, copy_env, *last_return);
@@ -61,5 +62,30 @@ char **parse_command(char **arg, char **copy_env, char *line, int *last_return)
         return copy_env;
     }
     execute_command(arg, copy_env, last_return);
+    return copy_env;
+}
+
+char **parse_command(char *command, char **copy_env,
+    int *last_return, char *line)
+{
+    char **arg;
+    const char *error = "Invalid null command.\n";
+
+    if (my_strchr(command, '|') != NULL) {
+        if (pipe_syntax_error(command) == -1) {
+            write(2, error, my_strlen((char *)error));
+            *last_return = 1;
+            return copy_env;
+        }
+        handle_pipe(command, copy_env, last_return);
+        return copy_env;
+    }
+    arg = transform_to_string_array(command, " \t");
+    if (arg == NULL || arg[0] == NULL) {
+        free_array(arg);
+        return copy_env;
+    }
+    copy_env = check_builtins(arg, copy_env, last_return, line);
+    free_array(arg);
     return copy_env;
 }

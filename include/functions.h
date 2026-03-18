@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2026
-** MINISHELL 1
+** MINISHELL 2
 ** File description:
 ** Header file for functions and for includes
 */
@@ -18,9 +18,7 @@
     #include <errno.h>
 
 // my_lib.c
-void my_putchar(char c);
 int my_strlen(char *s);
-void my_putstr(char *str);
 char *my_strdup(char *src);
 int my_strcmp(char *str1, char *str2);
 int my_strncmp(char *str1, char *str2, int n);
@@ -35,6 +33,9 @@ char **execute_unsetenv(char **arg, char **copy_env, int *last_return);
 // cd.c
 char **execute_cd(char **arg, char **copy_env, int *last_return);
 // exec.c
+char *get_command_path(char *command, char **copy_env);
+void handle_signal_error(int status, int *last_return);
+void execute_child(char **arg, char *path, char **copy_env);
 void execute_command(char **arg, char **env, int *last_return);
 // env_utils.c
 char *build_env_variable(char *name, char *value);
@@ -42,10 +43,15 @@ int get_env_var_index(char **copy_env, char *name);
 int is_name_valid(char *name);
 char **add_to_env(char **copy_env, char *new_var);
 void detele_env_var(char **copy_env, int index);
-// parsing
-char **parse_command(char **arg, char **copy_env, char *line, int *last_return);
-// main
+// parsing.c
+char **parse_command(char *command, char **copy_env,
+    int *last_return, char *line);
+// main.c
+void my_putstr(char *str);
 char **transform_to_string_array(char *str, char *separator);
 void free_array(char **arg);
+// pipe.c
+void handle_pipe(char *line, char **copy_env, int *last_return);
+int pipe_syntax_error(char *line);
 
 #endif

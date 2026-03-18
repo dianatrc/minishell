@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2026
-** MINISHELL 1
+** MINISHELL 2
 ** File description:
 ** Functions for managing the enviroment variables
 */

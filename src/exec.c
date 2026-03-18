@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2026
-** MINISHELL 1
+** MINISHELL 2
 ** File description:
 ** Execution and path handling functions
 */
@@ -55,7 +55,7 @@ static char *check_path(char **directors, char *command, char *path_copy)
     return NULL;
 }
 
-static char *get_command_path(char *command, char **copy_env)
+char *get_command_path(char *command, char **copy_env)
 {
     char *path = NULL;
     char *path_copy = NULL;
@@ -75,7 +75,7 @@ static char *get_command_path(char *command, char **copy_env)
     return check_path(directors, command, path_copy);
 }
 
-static void handle_signal_error(int status, int *last_return)
+void handle_signal_error(int status, int *last_return)
 {
     int sig = WTERMSIG(status);
     char *message = strsignal(sig);
@@ -96,7 +96,7 @@ static void handle_signal_error(int status, int *last_return)
     *last_return = 128 + sig;
 }
 
-static void execute_child(char **arg, char *path, char **copy_env)
+void execute_child(char **arg, char *path, char **copy_env)
 {
     const char *error1 = ": Permission denied.\n";
     const char *error2 = ": Command not found.\n";

@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2026
-** MINISHELL 1
+** MINISHELL 2
 ** File description:
-** Minishell 1 project
+** Minishell 2 project
 */
 
 #include "../include/functions.h"
@@ -50,18 +50,17 @@ static char **get_env_copy(char **env)
 
 static char **process_line(char *line, char **copy_env, int *last_return)
 {
-    char **arg = NULL;
+    char **commands = NULL;
     int len = my_strlen(line);
 
     if (len > 0 && line[len - 1] == '\n')
         line[len - 1] = '\0';
-    arg = transform_to_string_array(line, " \t");
-    if (arg[0] == NULL) {
-        free(arg);
+    commands = transform_to_string_array(line, ";");
+    if (!commands)
         return copy_env;
-    }
-    copy_env = parse_command(arg, copy_env, line, last_return);
-    free_array(arg);
+    for (int i = 0; commands[i] != NULL; i++)
+        copy_env = parse_command(commands[i], copy_env, last_return, line);
+    free_array(commands);
     return copy_env;
 }
 
