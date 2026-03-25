@@ -45,13 +45,8 @@ int pipe_syntax_error(char *line)
     return 0;
 }
 
-static void exec_pipe_child(char *command, int in_fd,
-    int out_fd, char **copy_env)
+static void redirect_pipe_fd(int in_fd, int out_fd)
 {
-    char **arg = transform_to_string_array(command, " \t");
-    char *path = get_command_path(arg[0], copy_env);
-    const char *error = ": Command not found\n";
-
     if (in_fd != STDIN_FILENO) {
         dup2(in_fd, STDIN_FILENO);
         close(in_fd);
@@ -60,10 +55,23 @@ static void exec_pipe_child(char *command, int in_fd,
         dup2(out_fd, STDOUT_FILENO);
         close(out_fd);
     }
+}
+
+static void exec_pipe_child(char *command, int in_fd,
+    int out_fd, char **copy_env)
+{
+    char *command_copy = my_strdup(command);
+    char **arg = NULL;
+    char *path = NULL;
+
+    redirect_pipe_fd(in_fd, out_fd);
+    if (apply_redirection(command_copy) == -1)
+        exit(1);
+    arg = transform_to_string_array(command_copy, " \t");
+    path = get_command_path(arg[0], copy_env);
     if (path == NULL) {
         write(2, arg[0], my_strlen(arg[0]));
-        write(2, error, my_strlen((char *)error));
-        free_array(arg);
+        write(2, ": Command not found\n", 20);
         exit(1);
     }
     execute_child(arg, path, copy_env);

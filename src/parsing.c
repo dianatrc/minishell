@@ -45,30 +45,51 @@ char **transform_to_string_array(char *str, char *separator)
     return arg;
 }
 
-static char **check_builtins(char **arg, char **copy_env,
-    int *last_return, char *line)
+static char **execute_builtin(char **arg, char **copy_env, int *last_return)
 {
-    if (my_strcmp(arg[0], "exit") == 0)
-        exit_program(arg, line, copy_env, *last_return);
+    char **result_env = NULL;
+
     if (my_strcmp(arg[0], "cd") == 0)
-        return execute_cd(arg, copy_env, last_return);
+        result_env = execute_cd(arg, copy_env, last_return);
     if (my_strcmp(arg[0], "setenv") == 0 && arg[1] != NULL)
-        return execute_setenv(arg, copy_env, last_return);
+        result_env = execute_setenv(arg, copy_env, last_return);
     if (my_strcmp(arg[0], "unsetenv") == 0)
-        return execute_unsetenv(arg, copy_env, last_return);
+        result_env = execute_unsetenv(arg, copy_env, last_return);
     if (my_strcmp(arg[0], "env") == 0 ||
         (my_strcmp(arg[0], "setenv") == 0 && arg[1] == NULL)) {
         print_env(copy_env, last_return);
-        return copy_env;
+        result_env = copy_env;
     }
-    execute_command(arg, copy_env, last_return);
+    if (result_env) {
+        free_array(arg);
+        return result_env;
+    }
+    return NULL;
+}
+
+static char **check_builtins(char *command, char **copy_env,
+    int *last_return, char *line)
+{
+    char *command_copy = my_strdup(command);
+    char **arg = transform_to_string_array(command_copy, " \t");
+    char **result_env = NULL;
+
+    free(command_copy);
+    if (!arg || !arg[0])
+        return copy_env;
+    if (my_strcmp(arg[0], "exit") == 0)
+        exit_program(arg, line, copy_env, *last_return);
+    result_env = execute_builtin(arg, copy_env, last_return);
+    if (result_env)
+        return result_env;
+    free_array(arg);
+    execute_command(command, copy_env, last_return);
     return copy_env;
 }
 
 char **parse_command(char *command, char **copy_env,
     int *last_return, char *line)
 {
-    char **arg;
     const char *error = "Invalid null command.\n";
 
     if (my_strchr(command, '|') != NULL) {
@@ -80,12 +101,5 @@ char **parse_command(char *command, char **copy_env,
         handle_pipe(command, copy_env, last_return);
         return copy_env;
     }
-    arg = transform_to_string_array(command, " \t");
-    if (arg == NULL || arg[0] == NULL) {
-        free_array(arg);
-        return copy_env;
-    }
-    copy_env = check_builtins(arg, copy_env, last_return, line);
-    free_array(arg);
-    return copy_env;
+    return check_builtins(command, copy_env, last_return, line);
 }

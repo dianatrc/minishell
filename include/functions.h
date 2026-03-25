@@ -16,6 +16,7 @@
     #include <signal.h>
     #include <sys/stat.h>
     #include <errno.h>
+    #include <fcntl.h>
 
 // my_lib.c
 int my_strlen(char *s);
@@ -36,7 +37,7 @@ char **execute_cd(char **arg, char **copy_env, int *last_return);
 char *get_command_path(char *command, char **copy_env);
 void handle_signal_error(int status, int *last_return);
 void execute_child(char **arg, char *path, char **copy_env);
-void execute_command(char **arg, char **env, int *last_return);
+void execute_command(char *command, char **copy_env, int *last_return);
 // env_utils.c
 char *build_env_variable(char *name, char *value);
 int get_env_var_index(char **copy_env, char *name);
@@ -53,5 +54,7 @@ void free_array(char **arg);
 // pipe.c
 void handle_pipe(char *line, char **copy_env, int *last_return);
 int pipe_syntax_error(char *line);
+// redirections.c
+int apply_redirection(char *command);
 
 #endif

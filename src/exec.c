@@ -132,24 +132,39 @@ static void execute_parent(pid_t pid, char *path, int *last_return)
     free(path);
 }
 
-void execute_command(char **arg, char **copy_env, int *last_return)
+static void execute_redirection_child(char *command_copy, char **arg,
+    char *path, char **copy_env)
 {
+    if (apply_redirection(command_copy) == -1)
+        exit(1);
+    free_array(arg);
+    arg = transform_to_string_array(command_copy, " \t");
+    if (!arg || !arg[0])
+        exit(0);
+    execute_child(arg, path, copy_env);
+    exit(0);
+}
+
+void execute_command(char *command, char **copy_env, int *last_return)
+{
+    char *command_copy = my_strdup(command);
+    char *tmp_copy = my_strdup(command);
+    char **arg = transform_to_string_array(tmp_copy, " \t");
     char *path = get_command_path(arg[0], copy_env);
-    const char *error = ": Command not found.\n";
     pid_t pid = 0;
 
     if (path == NULL) {
         write(2, arg[0], my_strlen(arg[0]));
-        write(2, error, my_strlen((char *)error));
+        write(2, ": Command not found.\n", 21);
         *last_return = 1;
-        return;
-    }
-    pid = fork();
-    if (pid == -1) {
-        free(path);
-    } else if (pid == 0) {
-        execute_child(arg, path, copy_env);
     } else {
-        execute_parent(pid, path, last_return);
+        pid = fork();
+        if (pid == 0)
+            execute_redirection_child(command_copy, arg, path, copy_env);
+        else
+            execute_parent(pid, path, last_return);
     }
+    free(tmp_copy);
+    free_array(arg);
+    free(command_copy);
 }
