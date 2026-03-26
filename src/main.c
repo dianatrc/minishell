@@ -67,7 +67,6 @@ static char **process_line(char *line, char **copy_env, int *last_return)
 int main(int argc, char **argv, char **env)
 {
     char *line = NULL;
-    const char *prompt = "$> ";
     char **copy_env = get_env_copy(env);
     size_t line_length = 0;
     int last_return = 0;
@@ -76,8 +75,7 @@ int main(int argc, char **argv, char **env)
     (void)argv;
     signal(SIGINT, SIG_IGN);
     while (1) {
-        if (isatty(0))
-            write(1, prompt, my_strlen((char *)prompt));
+        display_custom_prompt(copy_env);
         if (getline(&line, &line_length, stdin) == -1)
             break;
         copy_env = process_line(line, copy_env, &last_return);

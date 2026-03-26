@@ -7,6 +7,63 @@
 
 #include "../include/functions.h"
 
+static int ambiguous_redirect(char *command)
+{
+    int nb_input = 0;
+    int nb_output = 0;
+    const char *error1 = "Ambiguous input redirect.\n";
+    const char *error2 = "Ambiguous output redirect.\n";
+
+    for (int i = 0; command[i] != '\0'; i++) {
+        if (command[i] == '<' && (i == 0 || command[i - 1] != '<'))
+            nb_input++;
+        if (command[i] == '>' && (i == 0 || command[i - 1] != '>'))
+            nb_output++;
+    }
+    if (nb_input > 1) {
+        write(2, error1, my_strlen((char *)error1));
+        return -1;
+    }
+    if (nb_output > 1) {
+        write(2, error2, my_strlen((char *)error2));
+        return -1;
+    }
+    return 0;
+}
+
+static int missing_name(char *command, int index)
+{
+    const char *error = "Missing name for redirect.\n";
+
+    while (command[index] == ' ' || command[index] == '\t')
+        index++;
+    if (command[index] == '\0' || command[index] == '|' ||
+        command[index] == '>' || command[index] == '<') {
+        write(2, error, my_strlen((char *)error));
+        return -1;
+    }
+    return 0;
+}
+
+static int redirection_syntax_error(char *command)
+{
+    int index = 0;
+
+    if (ambiguous_redirect(command) == -1)
+        return -1;
+    for (int i = 0; command[i] != '\0'; i++) {
+        if (command[i] != '>' && command[i] != '<')
+            continue;
+        index = i + 1;
+        if (command[i] == command[index])
+            index++;
+        if (missing_name(command, index) == -1)
+            return -1;
+        i = index - 1;
+    }
+    return 0;
+}
+
 static char *get_filename(char *str)
 {
     int i = 0;
@@ -98,6 +155,8 @@ static int input_redirection(char *command)
 
 int apply_redirection(char *command)
 {
+    if (redirection_syntax_error(command) == -1)
+        return -1;
     if (input_redirection(command) == -1)
         return -1;
     if (output_redirection(command) == -1)

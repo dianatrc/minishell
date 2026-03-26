@@ -56,5 +56,7 @@ void handle_pipe(char *line, char **copy_env, int *last_return);
 int pipe_syntax_error(char *line);
 // redirections.c
 int apply_redirection(char *command);
+// bonus.c
+void display_custom_prompt(char **copy_env);
 
 #endif

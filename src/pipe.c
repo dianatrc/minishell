@@ -63,6 +63,7 @@ static void exec_pipe_child(char *command, int in_fd,
     char *command_copy = my_strdup(command);
     char **arg = NULL;
     char *path = NULL;
+    const char *error = ": Command not found.\n";
 
     redirect_pipe_fd(in_fd, out_fd);
     if (apply_redirection(command_copy) == -1)
@@ -71,7 +72,7 @@ static void exec_pipe_child(char *command, int in_fd,
     path = get_command_path(arg[0], copy_env);
     if (path == NULL) {
         write(2, arg[0], my_strlen(arg[0]));
-        write(2, ": Command not found\n", 20);
+        write(2, error, my_strlen((char *)error));
         exit(1);
     }
     execute_child(arg, path, copy_env);

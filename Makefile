@@ -17,7 +17,8 @@ SRC = src/main.c \
 	src/cd.c \
 	src/my_lib2.c \
 	src/pipe.c \
-	src/redirections.c
+	src/redirections.c \
+	bonus/bonus.c
 OBJ = $(SRC:.c=.o)
 
 all: mysh
