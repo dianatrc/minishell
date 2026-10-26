@@ -4,7 +4,7 @@ A custom UNIX command interpreter written in **C** inspired by **tcsh**. This pr
 
 # Key Features and Evolution
 **Phase 1: Core Shell and Environment (Minishell 1)**
-- **Custom Interactive Prompt:** displays a dynamic prompt, similar to tcsh, by showing the username (with capitalized first letter) and the current working directory with "~" shortcut for home (User:~/path>).
+- **Custom Interactive Prompt:** displays a dynamic prompt, similar to tcsh, by showing the username (with capitalized first letter) and the current working directory with shortcut for home (User:~/path>).
 - **PATH Resolution:** automatically searches and executes binaries located within system directories defined in the 'PATH' environment variable or via absolute/relative paths.
 - **Environment Management:** copies and safely restores the initial environment so that modifications do not affect the original 'env' variable.
 - **Core Built-in Commands:**
