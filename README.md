@@ -5,10 +5,10 @@ A custom UNIX command interpreter written in **C** inspired by **tcsh**. This pr
 # Key Features and Evolution
 **Phase 1: Core Shell and Environment (Minishell 1)**
 - **Custom Interactive Prompt:** displays a dynamic prompt, similar to tcsh, by showing the username (with capitalized first letter) and the current working directory with shortcut for home (User:~/path>).
-- **PATH Resolution:** automatically searches and executes binaries located within system directories defined in the 'PATH' environment variable or via absolute/relative paths.
-- **Environment Management:** copies and safely restores the initial environment so that modifications do not affect the original 'env' variable.
+- **PATH Resolution:** automatically searches and executes binaries located within system directories defined in the `PATH` environment variable or via absolute/relative paths.
+- **Environment Management:** copies and safely restores the initial environment so that modifications do not affect the original `env` variable.
 - **Core Built-in Commands:**
-    - cd: navigates directories with support for absolute/relative paths, '~' (home directory) and '-' (previous directory).
+    - cd: navigates directories with support for absolute/relative paths, `~` (home directory) and `-` (previous directory).
     - env: displays the current environment variables list.
     - setenv: dynamically adds or updates environment variables with strict alphanumeric name validation.
     - unsetenv: removes one or multiple environment variables.
@@ -48,7 +48,7 @@ A custom UNIX command interpreter written in **C** inspired by **tcsh**. This pr
 
 # Compilation and Usage
 **BUILD**
-To compile the 'mysh' binary using the provided Makefile, run: make.
+To compile the `mysh` binary using the provided Makefile, run: make.
 To clean intermediate or target files:
 - make clean    # Removes object files.
 - make fclean   # Removes object files and binaries.
