@@ -5,7 +5,7 @@
 ## Makefile for building the minishell 2 project
 ##
 
-CC = epiclang
+CC = gcc
 CFLAGS = -Wall -Wextra -Werror -I.
 
 SRC = src/main.c \
