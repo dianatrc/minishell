@@ -2,7 +2,7 @@
 
 A custom UNIX command interpreter written in **C** inspired by **tcsh**. This project is structured in two major developmental phases: a core standalone shell (minishell 1) and an advanced version featuring inter-process communication and file descriptors manipulation (minishell2).
 
-# Key Features and Evolution
+## Key Features and Evolution
 **Phase 1: Core Shell and Environment (Minishell 1)**
 - **Custom Interactive Prompt:** displays a dynamic prompt, similar to tcsh, by showing the username (with capitalized first letter) and the current working directory with shortcut for home (User:~/path>).
 - **PATH Resolution:** automatically searches and executes binaries located within system directories defined in the `PATH` environment variable or via absolute/relative paths.
@@ -23,11 +23,11 @@ A custom UNIX command interpreter written in **C** inspired by **tcsh**. This pr
     - Input Redirection (<): reads process input directly from a specified file.
 - **Syntax and Error Validation:** comprehensive error checks detecting invalid pipe placements, ambiguous redirections and syntax anomalies matching standard tcsh behavior.
 
-# Error Handling and Robustness
+## Error Handling and Robustness
 - **Process Signals:** intercepts SIGINT (Ctrl+C) without crashing the shell prompt.
 - **Error Reporting:** writes all runtime error messages directly to stderr and complies with standard exit code (exits with code 84 on critical failures or 0 on success).
 
-# Project Structure
+## Project Structure
 - include/
     - functions.h       # Main header file with prototypes and system includes
 - bonus/
@@ -46,7 +46,7 @@ A custom UNIX command interpreter written in **C** inspired by **tcsh**. This pr
 - Makefile              # Compilation rules for building (all), cleaning (clean, fclean) and rebuilding (re) the project.
 - README.md
 
-# Compilation and Usage
+## Compilation and Usage
 **BUILD**
 To compile the `mysh` binary using the provided Makefile, run: make.
 To clean intermediate or target files:
